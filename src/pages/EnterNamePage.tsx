@@ -1,15 +1,17 @@
-import { useState } from 'react';
+import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuiz } from '../context/QuizContext';
 
 export default function EnterNamePage () {
-    const [name, setName] = useState('');
+    const inputRef = useRef<HTMLInputElement>(null);
     const navigate = useNavigate();
     const { setName: setUserName } = useQuiz();
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        setUserName(name);
+        if (inputRef.current) {
+            setUserName(inputRef.current.value);
+        }
         navigate('/quiz');
     };
 
@@ -18,9 +20,8 @@ export default function EnterNamePage () {
             <h1 className="text-2xl font-bold mb-4">Enter Your Name</h1>
             <form onSubmit={handleSubmit}>
                 <input
+                    ref={inputRef}
                     type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
                     className="p-2 mb-4 text-white border-amber-300 border-2 font-bold rounded"
                     placeholder="Enter your name"
                 />
@@ -31,4 +32,3 @@ export default function EnterNamePage () {
         </div>
     );
 };
-
