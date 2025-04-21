@@ -28,7 +28,7 @@ export default function QuizPage() {
 
     const currentQuestion = questions[currentIndex];
 
-    const handleAnswer = useCallback((option: string) => {
+    const handleAnswer = useCallback((option: string| null) => {
         if (selected) return;
 
         if (!currentQuestion) return;
@@ -57,7 +57,7 @@ export default function QuizPage() {
     }, [currentQuestion, currentIndex, questions.length, score, selected, navigate, userName, setGlobalScore]);
 
     const handleTimeout = useCallback(() => {
-        handleAnswer('');
+        handleAnswer(null);
     }, [handleAnswer]);
 
     if (!currentQuestion) {
