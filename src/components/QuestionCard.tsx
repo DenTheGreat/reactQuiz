@@ -8,29 +8,18 @@ type Props = {
 }
 
 export default function QuestionCard({
-                                         question,
-                                         options,
-                                         correctAnswer,
-                                         selected,
-                                         showCorrect,
-                                         onSelect,
-                                     }: Props) {
-
-    const getButtonClass = (option: string) => {
-        if (!showCorrect) {
-            return 'bg-gray-700 hover:bg-gray-600'; // Default button state
-        }
-
-        if (option === correctAnswer) {
-            return 'bg-green-600'; // Correct answer
-        }
-
-        if (option === selected && option !== correctAnswer) {
-            return 'bg-red-600';
-        }
-
-        return 'bg-gray-700';
-    };
+                          question,
+                          options,
+                          correctAnswer,
+                          selected,
+                          showCorrect,
+                          onSelect,
+                      }: Props) {
+    const getButtonClass = (option: string) =>
+        !showCorrect ? 'bg-gray-700 hover:bg-gray-600' :
+            option === correctAnswer ? 'bg-green-600' :
+                option === selected && option !== correctAnswer ? 'bg-red-600' :
+                    'bg-gray-700';
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center text-white">

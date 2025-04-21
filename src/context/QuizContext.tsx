@@ -20,7 +20,6 @@ export const QuizProvider = ({ children }: { children: ReactNode }) => {
     );
 };
 
-// Custom hook to access the Quiz context
 export const useQuiz = () => {
     const context = useContext(QuizContext);
     if (!context) {

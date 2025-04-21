@@ -1,12 +1,7 @@
 [
-  { "name": "Alice", "score": 80 },
-  { "name": "Bob", "score": 95 },
-  { "name": "Charlie", "score": 70 },
-  { "name": "Diana", "score": 85 },
-  { "name": "Ethan", "score": 60 },
-  { "name": "Fay", "score": 75 },
-  { "name": "George", "score": 90 },
-  { "name": "Hannah", "score": 65 },
-  { "name": "Ian", "score": 50 },
-  { "name": "Jill", "score": 100 }
+  { "name": "Fay", "score": 1 },
+  { "name": "George", "score":1 },
+  { "name": "Hannah", "score": 1 },
+  { "name": "Ian", "score": 1 },
+  { "name": "Jill", "score": 1 }
 ]

@@ -1,8 +1,36 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuiz } from '../context/QuizContext';
 import QuestionCard from '../components/QuestionCard';
 import { Question } from '../types';
+
+const TimerDisplay = ({ initialTime, onTimeUp }: { initialTime: number, onTimeUp: () => void }) => {
+    const [timeLeft, setTimeLeft] = useState(initialTime);
+
+    useEffect(() => {
+        setTimeLeft(initialTime);
+    }, [initialTime]);
+
+
+    useEffect(() => {
+        if (timeLeft <= 0) {
+            onTimeUp();
+            return;
+        }
+
+        const interval = setInterval(() => {
+            setTimeLeft(prev => prev - 1);
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, [timeLeft, onTimeUp]);
+
+    return (
+        <div className="mb-4">
+            <h2 className="text-xl font-semibold">Time Left: {timeLeft}s</h2>
+        </div>
+    );
+};
 
 export default function QuizPage() {
     const [questions, setQuestions] = useState<Question[]>([]);
@@ -15,6 +43,7 @@ export default function QuizPage() {
 
     const { name: userName, setScore: setGlobalScore } = useQuiz();
 
+
     useEffect(() => {
         fetch('/data/questions.json')
             .then((res) => res.json())
@@ -22,23 +51,12 @@ export default function QuizPage() {
             .catch((err) => console.error('Failed to load questions', err));
     }, []);
 
-    useEffect(() => {
-        if (timer === 0) {
-            handleAnswer('');
-            return;
-        }
-
-        const interval = setInterval(() => {
-            setTimer((prev) => prev - 1);
-        }, 1000);
-
-        return () => clearInterval(interval);
-    }, [timer]);
-
     const currentQuestion = questions[currentIndex];
 
-    const handleAnswer = (option: string) => {
+    const handleAnswer = useCallback((option: string) => {
         if (selected) return;
+
+        if (!currentQuestion) return;
 
         const isCorrect = option === currentQuestion.answer;
         const newScore = isCorrect ? score + 1 : score;
@@ -61,7 +79,12 @@ export default function QuizPage() {
                 setTimer(30);
             }
         }, 3000);
-    };
+    }, [currentQuestion, currentIndex, questions.length, score, selected, navigate, userName, setGlobalScore]);
+
+    // Handle timeout
+    const handleTimeout = useCallback(() => {
+        handleAnswer('');
+    }, [handleAnswer]);
 
     if (!currentQuestion) {
         return <div className="text-white p-4">Loading questions...</div>;
@@ -69,9 +92,10 @@ export default function QuizPage() {
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center text-white">
-            <div className="mb-4">
-                <h2 className="text-xl font-semibold">Time Left: {timer}s</h2>
-            </div>
+            <TimerDisplay
+                initialTime={timer}
+                onTimeUp={handleTimeout}
+            />
             <QuestionCard
                 question={currentQuestion.question}
                 options={currentQuestion.options}
