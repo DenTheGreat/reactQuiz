@@ -3,34 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { useQuiz } from '../context/QuizContext';
 import QuestionCard from '../components/QuestionCard';
 import { Question } from '../types';
-
-const TimerDisplay = ({ initialTime, onTimeUp }: { initialTime: number, onTimeUp: () => void }) => {
-    const [timeLeft, setTimeLeft] = useState(initialTime);
-
-    useEffect(() => {
-        setTimeLeft(initialTime);
-    }, [initialTime]);
+import TimerDisplay from "../components/timer.tsx";
 
 
-    useEffect(() => {
-        if (timeLeft <= 0) {
-            onTimeUp();
-            return;
-        }
-
-        const interval = setInterval(() => {
-            setTimeLeft(prev => prev - 1);
-        }, 1000);
-
-        return () => clearInterval(interval);
-    }, [timeLeft, onTimeUp]);
-
-    return (
-        <div className="mb-4">
-            <h2 className="text-xl font-semibold">Time Left: {timeLeft}s</h2>
-        </div>
-    );
-};
 
 export default function QuizPage() {
     const [questions, setQuestions] = useState<Question[]>([]);
@@ -81,7 +56,6 @@ export default function QuizPage() {
         }, 3000);
     }, [currentQuestion, currentIndex, questions.length, score, selected, navigate, userName, setGlobalScore]);
 
-    // Handle timeout
     const handleTimeout = useCallback(() => {
         handleAnswer('');
     }, [handleAnswer]);
@@ -95,6 +69,7 @@ export default function QuizPage() {
             <TimerDisplay
                 initialTime={timer}
                 onTimeUp={handleTimeout}
+                questionId={currentIndex}
             />
             <QuestionCard
                 question={currentQuestion.question}
