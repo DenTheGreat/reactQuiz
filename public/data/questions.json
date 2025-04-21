@@ -1,0 +1,52 @@
+[
+  {
+    "question": "What is the capital of France?",
+    "options": ["Berlin", "Madrid", "Paris", "Rome"],
+    "correctIndex": 2
+  },
+  {
+    "question": "Which planet is known as the Red Planet?",
+    "options": ["Earth", "Mars", "Jupiter", "Saturn"],
+    "correctIndex": 1
+  },
+  {
+    "question": "Who wrote 'Hamlet'?",
+    "options": ["Charles Dickens", "Leo Tolstoy", "Mark Twain", "William Shakespeare"],
+    "correctIndex": 3
+  },
+  {
+    "question": "What is the chemical symbol for water?",
+    "options": ["O2", "H2O", "CO2", "NaCl"],
+    "correctIndex": 1
+  },
+  {
+    "question": "How many continents are there on Earth?",
+    "options": ["5", "6", "7", "8"],
+    "correctIndex": 2
+  },
+  {
+    "question": "Which language is primarily spoken in Brazil?",
+    "options": ["Spanish", "Portuguese", "French", "English"],
+    "correctIndex": 1
+  },
+  {
+    "question": "What is the largest mammal in the world?",
+    "options": ["Elephant", "Blue Whale", "Giraffe", "Polar Bear"],
+    "correctIndex": 1
+  },
+  {
+    "question": "Who painted the Mona Lisa?",
+    "options": ["Michelangelo", "Vincent Van Gogh", "Pablo Picasso", "Leonardo da Vinci"],
+    "correctIndex": 3
+  },
+  {
+    "question": "In what year did World War II end?",
+    "options": ["1945", "1939", "1918", "1963"],
+    "correctIndex": 0
+  },
+  {
+    "question": "What is the square root of 64?",
+    "options": ["6", "7", "8", "9"],
+    "correctIndex": 2
+  }
+]
