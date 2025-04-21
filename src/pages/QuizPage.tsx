@@ -1,33 +1,65 @@
-import React from 'react'
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useQuiz } from '../context/QuizContext';
+import QuestionCard from '../components/QuestionCard';
+import { Question } from "../types";
 
-type ScoreEntry = {
-    name: string
-    score: number
-}
+export default function QuizPage() {
+    const [questions, setQuestions] = useState<Question[]>([]);
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [selected, setSelected] = useState<string | null>(null);
+    const [showCorrect, setShowCorrect] = useState(false);
+    const navigate = useNavigate();
 
-type ScoreboardProps = {
-    entries: ScoreEntry[]
-}
+    const { name: userName, score, setScore } = useQuiz();
 
-const Scoreboard: React.FC<ScoreboardProps> = ({ entries }) => {
-    const sorted = [...entries].sort((a, b) => b.score - a.score)
+    useEffect(() => {
+        fetch('/data/questions.json')
+            .then((res) => res.json())
+            .then((data) => setQuestions(data))
+            .catch((err) => console.error('Failed to load questions', err));
+    }, []);
+
+    const currentQuestion = questions[currentIndex];
+
+    const handleAnswer = (option: string) => {
+        if (selected) return;
+
+        const isCorrect = option === currentQuestion.answer;
+        const newScore = isCorrect ? score + 1 : score;
+
+        setSelected(option);
+        setShowCorrect(true);
+
+        if (isCorrect) setScore(newScore);
+
+        setTimeout(() => {
+            const isLastQuestion = currentIndex + 1 >= questions.length;
+
+            if (isLastQuestion) {
+                navigate('/score', { state: { name: userName, score: newScore } });
+            } else {
+                setCurrentIndex((prev) => prev + 1);
+                setSelected(null);
+                setShowCorrect(false);
+            }
+        }, 1500);
+    };
+
+    if (questions.length === 0) {
+        return <div className="text-white p-4">Loading questions...</div>;
+    }
 
     return (
-        <div className="p-4 bg-gray-800 text-white rounded shadow-md w-full max-w-md mx-auto">
-            <h2 className="text-2xl font-bold mb-4 text-center">Leaderboard</h2>
-            <ul className="space-y-2">
-                {sorted.map((entry, index) => (
-                    <li
-                        key={index}
-                        className="flex justify-between items-center bg-gray-700 px-4 py-2 rounded"
-                    >
-                        <span className="font-medium">{index + 1}. {entry.name}</span>
-                        <span className="text-yellow-400 font-bold">{entry.score}</span>
-                    </li>
-                ))}
-            </ul>
+        <div className="min-h-screen flex flex-col items-center justify-center text-white">
+            <QuestionCard
+                question={currentQuestion.question}
+                options={currentQuestion.options}
+                correctAnswer={currentQuestion.answer}
+                selected={selected}
+                showCorrect={showCorrect}
+                onSelect={handleAnswer}
+            />
         </div>
-    )
+    );
 }
-
-export default Scoreboard

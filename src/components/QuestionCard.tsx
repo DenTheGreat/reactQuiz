@@ -1,40 +1,52 @@
-// components/QuestionCard.tsx
 type Props = {
-    question: string
-    options: string[]
-    correctAnswer: string
-    selected: string | null
-    showCorrect: boolean
-    onSelect: (option: string) => void
+    question: string;
+    options: string[];
+    correctAnswer: string;
+    selected: string | null;
+    showCorrect: boolean;
+    onSelect: (option: string) => void;
 }
 
-const QuestionCard = ({ question, options, correctAnswer, selected, showCorrect, onSelect }: Props) => {
+export default function QuestionCard({
+                                         question,
+                                         options,
+                                         correctAnswer,
+                                         selected,
+                                         showCorrect,
+                                         onSelect,
+                                     }: Props) {
+
+    const getButtonClass = (option: string) => {
+        if (!showCorrect) {
+            return 'bg-gray-700 hover:bg-gray-600'; // Default button state
+        }
+
+        if (option === correctAnswer) {
+            return 'bg-green-600'; // Correct answer
+        }
+
+        if (option === selected && option !== correctAnswer) {
+            return 'bg-red-600';
+        }
+
+        return 'bg-gray-700';
+    };
+
     return (
-        <div>
+        <div className="min-h-screen flex flex-col items-center justify-center text-white">
             <h1 className="text-2xl font-bold mb-4">{question}</h1>
             <div className="grid grid-cols-2 gap-2">
-                {options.map(option => {
-                    const isCorrect = option === correctAnswer
-                    const isSelected = selected === option
-                    const show = showCorrect && (isSelected || isCorrect)
-
-                    return (
-                        <button
-                            key={option}
-                            className={`p-2 rounded text-sm border 
-              ${show && isCorrect ? 'bg-green-600' : ''}
-              ${show && isSelected && !isCorrect ? 'bg-red-600' : ''}
-              ${!show ? 'bg-gray-700 hover:bg-gray-600' : ''}`}
-                            onClick={() => onSelect(option)}
-                            disabled={!!selected}
-                        >
-                            {option}
-                        </button>
-                    )
-                })}
+                {options.map((option) => (
+                    <button
+                        key={option}
+                        className={`p-2 rounded text-sm border ${getButtonClass(option)}`}
+                        onClick={() => onSelect(option)}
+                        disabled={!!selected}
+                    >
+                        {option}
+                    </button>
+                ))}
             </div>
         </div>
-    )
+    );
 }
-
-export default QuestionCard

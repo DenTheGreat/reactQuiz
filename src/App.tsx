@@ -1,11 +1,21 @@
-import ScorePage from './pages/ScorePage'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import EnterNamePage from "./pages/EnterNamePage";
+import QuizPage from "./pages/QuizPage";
+import ScorePage from "./pages/ScorePage";
+import {QuizProvider} from "./context/QuizContext.tsx";
 
-function App() {
+const App = () => {
     return (
-        <div className="min-h-screen bg-gray-900 text-white p-4">
-            <ScorePage name="TestUser" score={7} />
-        </div>
-    )
-}
+        <QuizProvider>
+            <Router>
+                <Routes>
+                    <Route path="/" element={<EnterNamePage />} />
+                    <Route path="/quiz" element={<QuizPage />} />
+                    <Route path="/score" element={<ScorePage />} />
+                </Routes>
+            </Router>
+        </QuizProvider>
+    );
+};
 
-export default App
+export default App;

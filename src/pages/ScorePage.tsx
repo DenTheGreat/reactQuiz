@@ -1,17 +1,27 @@
 import { useEffect, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 type Entry = {
     name: string
     score: number
 }
 
-export default function ScorePage({ name, score }: { name: string; score: number }) {
+export default function ScorePage() {
+    const location = useLocation()
+    const navigate = useNavigate()
+    const { name, score } = location.state || {}
+
     const [leaderboard, setLeaderboard] = useState<Entry[]>([])
 
     useEffect(() => {
+        if (!name || typeof score !== 'number') {
+            navigate('/') // fallback if user comes directly
+            return
+        }
+
         fetch('/data/leaderboard.json')
             .then(res => res.json())
-            .then(data => setLeaderboard(data))
+            .then(data => setLeaderboard([...data, { name, score }]))
     }, [])
 
     return (
